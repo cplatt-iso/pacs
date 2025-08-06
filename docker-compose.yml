@@ -1,0 +1,49 @@
+services:
+  brit-works:
+    build:
+      # Context is the current directory (where the Dockerfile is)
+      context: .
+    image: brit-works:latest
+    container_name: brit_works_pacs
+    restart: unless-stopped
+    ports:
+      # This maps port 8080 on your host to port 80 in the container for Web UI access.
+      - "8081:80"
+    expose:
+      # These ports are accessible to other containers on the 'shared' network,
+      # but are NOT mapped to the host machine.
+      - "443"
+      - "3200"
+      - "3222"
+      - "3280"
+      - "3300"
+      - "9080"
+      - "9082"
+      - "9443"
+    volumes:
+      # Use named volumes for persistent data
+      - brit-db:/opt/pacs/db
+      - brit-logs:/opt/pacs/logs
+      - brit-store:/opt/pacs/store
+      - brit-transactions:/opt/pacs/transactions
+    networks:
+      # Attach to the shared network (defined below)
+      - shared
+      - npm_web
+
+# Define the volumes for persistence
+volumes:
+  brit-db:
+  brit-logs:
+  brit-store:
+  brit-transactions:
+
+# Define the shared network as external, so we can connect to the one
+# created by the other docker-compose file.
+networks:
+  shared:
+    external: true
+    name: axiom_shared_network
+  npm_web:
+    external: true
+    name: npm_web

@@ -24,6 +24,7 @@ Before building and running the PACS system, ensure you have:
 2. **Docker Compose** installed
 3. The Brit PACS Debian package (`brit-works_6.5.0-07f_amd64.deb`) in this directory
 4. Access to the `axiom_shared_network` Docker network (created by other components)
+5. Edit ssl keystore password (currently set to 'password')
 
 ## Quick Notes
 

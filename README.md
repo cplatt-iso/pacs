@@ -25,6 +25,10 @@ Before building and running the PACS system, ensure you have:
 3. The Brit PACS Debian package (`brit-works_6.5.0-07f_amd64.deb`) in this directory
 4. Access to the `axiom_shared_network` Docker network (created by other components)
 
+## Quick Notes
+
+Depending on your envrionment, the "docker-compose" command may be "docker compose" - adjust as necessary.
+
 ## Quick Start
 
 ### 1. Build the PACS Container
@@ -50,7 +54,7 @@ http://localhost:8081
 
 **Default Credentials:**
 - Username: `admin` (or check Brit documentation for default credentials)
-- Password: `britsys` (or check Brit documentation)
+- Password: ask an InsiteOne representative.
 
 ## Container Architecture
 
@@ -72,16 +76,18 @@ The following directories are mounted as Docker volumes for data persistence:
 - **`brit-store`** → `/opt/pacs/store` - DICOM image storage
 - **`brit-transactions`** → `/opt/pacs/transactions` - Transaction logs
 
+You can edit the docker-compose file to remap volumes to accessible filesystems on the host.
+
 ### Network Configuration
-- **Port 8081** (host) → Port 80 (container) - Web UI access
+- **Port 8081** (host) → Port 80 (container) - Web UI access - note that you will want to map other ports externally, specifically 9080 and 9443 if you do not use a reverse proxy.
 - **Internal Ports:** 443, 3200, 3222, 3280, 3300, 9080, 9082, 9443
-- **Networks:** Connected to `axiom_shared_network` and `npm_web`
+- **Networks:** Connected to `axiom_shared_network` and `npm_web` in this example.  **Adjust as necessary.**  This system was tested behind an nginx proxy manager (NPM) reverse proxy and used in an environment with other containers facilitating scheduled workflow (hl7/dicom).
 
 ## Detailed Setup Instructions
 
 ### Step 1: Prepare the Environment
 
-1. Ensure the Brit PACS Debian package is in this directory:
+1. Ensure the PACS Debian package is in this directory:
    ```bash
    ls -la brit-works_6.5.0-07f_amd64.deb
    ```
@@ -138,7 +144,8 @@ docker-compose logs -f brit-works
    ```
 
 3. **Access web interface:**
-   - Open browser to `http://localhost:8081`
+   - If using local host for build -
+   - Open browser to `http://localhost:9080` **you will need to map 9080/9443 in docker-compose if you dont use a reverse proxy**
    - Look for the Brit PACS login page
 
 ## Configuration
@@ -152,10 +159,11 @@ The container is configured with optimized Java settings for PACS workloads:
 
 ### DICOM Configuration
 The PACS system listens on standard DICOM ports:
+**This was AI generated and probably wrong, 3200 does work for DICOM**
 - **Port 3200** - DICOM C-STORE operations
 - **Port 3222** - DICOM query/retrieve
 - **Port 3280** - DICOM modality worklist
-- **Port 3300** - DICOM print services
+- **Port 3300** - HL7 MLLP
 
 ## Troubleshooting
 

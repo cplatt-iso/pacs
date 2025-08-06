@@ -42,8 +42,8 @@ RUN /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool \
     -alias works \
     -keyalg RSA \
     -keystore brit.keystore \
-    -storepass britsys \
-    -keypass britsys \
+    -storepass password \
+    -keypass password \
     -validity 3650 \
     -dname "CN=localhost, OU=IT, O=Brit, L=Nowhere, S=State, C=US"
 
